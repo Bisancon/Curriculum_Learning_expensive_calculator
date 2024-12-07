@@ -60,4 +60,22 @@ Curriculum Learning: обучение с поэтапным усложнение
 
 ```bash
 git clone https://github.com/yourusername/curriculum-learning-math-transformer.git
-cd curriculum-learning-math-transformer
+cd Curriculum_Learning_expensive_calculator
+python3 -m venv venv
+.\venv\Scripts\activate
+pip freeze > requirements.txt
+```
+
+## Реализация
+
+
+## Генерация данных
+Для генерации данных используется файл data_generator.py. Он генерирует два типа наборов данных:
+
+```bash
+python data_generator.py
+```
+
+Простые операции: Генерируются выражения с двумя числами (например, 1 + 1, 5 * 3).
+Сложные операции: Генерируются выражения с тремя и четырьмя числами (например, ({num1} + {num2}) * {num3}, ({num1} + {num2}) * ({num3} - {num4})).
+Результаты сохраняются в файлы сurriculum_data.csv, shuffled_data.csv (разбросанные случайным образом примеры из сurriculum_data). Тестовые данные сохраняются в test_data.csv.
