@@ -37,23 +37,27 @@ class CurriculumTokenizer:
     # Преобразование токенов обратно в текст выражения
     def decode(self, tokens):
         return ''.join(self.reverse_vocab[token] for token in tokens)
+    def tokenize(self, expression):
+        # Преобразование выражения в токены
+        tokens = [self.vocab[char] for char in expression if char in self.vocab]
+        return tokens
 
 # Пример использования
-tokenizer = CurriculumTokenizer()
+# tokenizer = CurriculumTokenizer()
 
-example = "35-14=21"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
-print()
+# example = "35-14=21"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
+# print()
 
-example = "17*456=7752"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
-print()
+# example = "17*456=7752"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
+# print()
 
-example = "1025&2=1"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
+# example = "1025&2=1"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
