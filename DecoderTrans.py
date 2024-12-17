@@ -77,7 +77,6 @@ class DecoderTransformer(nn.Module):
         
         super().__init__()
         
-        
         self.we = nn.Embedding(num_embeddings=num_tokens, 
                                embedding_dim=n_embd)     
         self.pe = PositionEncoding(d_model=n_embd, 
@@ -85,9 +84,6 @@ class DecoderTransformer(nn.Module):
         head_size = n_embd // n_head
         self.self_attention = MultiHeadAttention(n_embd, n_head, head_size)
         self.fc_layer = nn.Linear(in_features=n_embd, out_features=num_tokens)
-        
-        self.loss = nn.CrossEntropyLoss()
-        
         
     def forward(self, token_ids):
                 
