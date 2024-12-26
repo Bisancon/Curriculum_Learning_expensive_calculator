@@ -48,27 +48,27 @@ class CurriculumTokenizer:
         return [token if token < self.vocab_size else self.unk_token for token in tokens]
 
 
-# Пример использования
-tokenizer = CurriculumTokenizer()
-
-example = "35-14=21"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
-print()
-
-example = "17*456=7752"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
-print()
-
-example = "1025&2=1"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
-
-example = "(1025&2)+3=1"
-tokens = tokenizer.encode(example)
-print("Токены:", tokens)
-print("Обратное преобразование:", tokenizer.decode(tokens))
+# # Пример использования
+# tokenizer = CurriculumTokenizer()
+#
+# example = "35-14=21"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
+# print()
+#
+# example = "17*456=7752"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
+# print()
+#
+# example = "1025&2=1"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
+#
+# example = "(1025&2)+3=1"
+# tokens = tokenizer.encode(example)
+# print("Токены:", tokens)
+# print("Обратное преобразование:", tokenizer.decode(tokens))
