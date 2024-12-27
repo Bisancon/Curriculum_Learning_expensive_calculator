@@ -65,13 +65,20 @@ def train_epoch(model, loader, optimizer, criterion, device, epoch):
 
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
-        outputs = model(inputs)[:, -1, :]
+        outputs = model(inputs)
+
+        # Если модель возвращает последовательность токенов, обрабатываем всю последовательность
+        if outputs.dim() == 3:
+            # Переформатируем тензоры для совместимости с функцией потерь
+            outputs = outputs.reshape(-1, outputs.size(-1))
+            targets = targets.reshape(-1)
+        
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
 
         total_loss += loss.item()
-        _, predicted = torch.max(outputs, 1)
+        predicted = torch.argmax(outputs, dim=1)
         correct += (predicted == targets).sum().item()
         total += targets.size(0)
 
