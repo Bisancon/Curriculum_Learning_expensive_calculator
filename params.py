@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 import yaml
+import marshmallow.validate
 from marshmallow_dataclass import class_schema
 
 @dataclass()
