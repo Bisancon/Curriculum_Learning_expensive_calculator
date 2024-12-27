@@ -17,7 +17,7 @@ class ModelParams:
     embedding_dim: int = field(default=1, metadata={"validate": marshmallow.validate.Range(min=1)})
     num_layers: int = field(default=1, metadata={"validate": marshmallow.validate.Range(min=1)})
     num_heads: int = field(default=1, metadata={"validate": marshmallow.validate.Range(min=1)})
-    dropout: float = field(default=0.1, metadata={"validate": marshmallow.validate.Range(min=0)})
+    dropout: float = field(default=0.1, metadata={"validate": marshmallow.validate.Range(min=0, max=1)})
 
 @dataclass()
 class DataParams:
