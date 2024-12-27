@@ -1,24 +1,22 @@
+from pathlib import Path
+
 import torch
+import transformers
 import torch.nn as nn
 import torch.optim as optim
+import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
-import pandas as pd
-from DecoderTrans import TransformerDecoder
-from tokenizer import CurriculumTokenizer
-from torch.nn.utils.rnn import pad_sequence
-import yaml
-from pathlib import Path
 import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
+from torch.nn.utils.rnn import pad_sequence
+
+from DecoderTrans import TransformerDecoder
+from tokenizer import CurriculumTokenizer
+from params import read_config_params
 
 # Загрузка конфигурации
-def load_config(config_path="config.yaml"):
-    with open(config_path, "r") as file:
-        config = yaml.safe_load(file)
-    return config
-
-config = load_config()
+config = read_config_params()
 
 # Определение классов для работы с данными
 class ExpressionDataset(Dataset):
@@ -79,6 +77,8 @@ def train_epoch(model, loader, optimizer, criterion, device, epoch):
 
         # Логирование текущего батча
         writer.add_scalar("Train/Loss", loss.item(), epoch * len(loader) + batch_idx)
+
+    scheduler.step()
 
     accuracy = 100 * correct / total
     epoch_loss = total_loss / len(loader)
@@ -178,17 +178,17 @@ def train_curriculum_learning(model, train_dataset, val_loader, optimizer, crite
     return curriculum_train_losses, curriculum_val_losses, curriculum_train_accs, curriculum_val_accs
 
 # Директория для логов TensorBoard
-log_dir = config["logging"]["log_dir"]  # Укажите путь в вашем config.yaml
+log_dir = config.log_dir  # Укажите путь в вашем config.yaml
 writer = SummaryWriter(log_dir)
 
 # Установка устройства
-device = torch.device(config["training"]["device"])
+device = torch.device(config.training.device)
 
 # Параметры данных
-train_split = config["data"]["train_split"]
-val_split = config["data"]["val_split"]
-random_seed = config["data"]["random_seed"]
-dataset_path = config["data"]["dataset_path"]
+train_split = config.data.train_split
+val_split = config.data.val_split
+random_seed = config.data.random_seed
+dataset_path = config.data.dataset_path
 
 # Загрузка данных
 df = pd.read_csv(dataset_path)
@@ -208,17 +208,17 @@ train_dataset = ExpressionDataset(train_df)
 val_dataset = ExpressionDataset(val_df)
 
 # DataLoader
-batch_size = config["training"]["batch_size"]
-shuffle = config["training"]["shuffle"]
+batch_size = config.training.batch_size
+shuffle = config.training.shuffle
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_batch)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_batch)
 
 # Параметры модели
-num_tokens = config["model"]["num_tokens"]
-embedding_dim = config["model"]["embedding_dim"]
-num_layers = config["model"]["num_layers"]
-num_heads = config["model"]["num_heads"]
-dropout = config["model"].get("dropout", 0.0)
+num_tokens = config.model.num_tokens
+embedding_dim = config.model.embedding_dim
+num_layers = config.model.num_layers
+num_heads = config.model.num_heads
+dropout = config.model.dropout
 num_classes = df['result'].max() - df['result'].min() + 1
 
 model = TransformerDecoder(
@@ -230,10 +230,11 @@ model = TransformerDecoder(
 ).to(device)
 
 # Параметры обучения
-learning_rate = config["training"]["learning_rate"]
-num_epochs = config["training"]["num_epochs"]
+learning_rate = config.training.learning_rate
+num_epochs = config.training.num_epochs
 
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+scheduler = transformers.get_linear_schedule_with_warmup(optimizer, (num_epochs + 9) // 10, num_epochs)
 criterion = nn.CrossEntropyLoss()
 
 # Параметры обучения
